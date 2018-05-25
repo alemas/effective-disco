@@ -8,6 +8,7 @@ public class Host {
 
 	private DatagramSocket receiveSocket;
 	private boolean shouldReceive = true;
+	private String id = "";
 	
 	public Host() throws Exception {
 		this.receiveSocket = new DatagramSocket();
@@ -28,14 +29,12 @@ public class Host {
 					} catch (IOException e) {
 						
 					}
-					System.out.println("Oi, recebi algo (" + name +")");
+					System.out.println("Oi, recebi algo (" + id +")");
 				}
 			}
 		}.start();
 	}
 
-	public static void main(String[] args) {
-	}
 	
 	public void sendTo(String message, Inet6Address address, int port) {
 		new Thread () {
