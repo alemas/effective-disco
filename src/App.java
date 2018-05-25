@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -36,14 +35,16 @@ public class App {
 				
 			case "1" :
 				ArrayList<String> hosts = network.getHostIds();
-				Iterator i = hosts.iterator();
+				Iterator<String> i = hosts.iterator();
 				if (!i.hasNext()) { System.out.println("Não existe nenhum host :,("); }
 				while(i.hasNext()) { System.out.println(i.next()); }
 				
 				break;
 				
-			case "q" : shouldRun = false;
-			
+			case "q" :
+				shouldRun = false;
+				network.close();
+				
 				break;
 			
 			default :
