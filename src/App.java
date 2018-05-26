@@ -84,7 +84,6 @@ public class App {
 		System.out.println("2 - Send message locally");
 		System.out.println("h - Show Help");
 		System.out.println("q - Quit");
-		
 	}
 
 	private static String getExistingId() {

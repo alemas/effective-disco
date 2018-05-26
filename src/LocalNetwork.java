@@ -16,24 +16,24 @@ public class LocalNetwork {
 		this.hosts = new Hashtable<String, Host>();
 		
 		//TODO: esse InetAddress.getLocalHost retorna ipv4, precisamos do ipv6
-		try {
-			this.localAddress = InetAddress.getLocalHost();
-		} catch (UnknownHostException e) {
-			System.out.println(e.getMessage());
-		}
 //		try {
-//			InetAddress[] addr = InetAddress.getAllByName(InetAddress.getLocalHost().getHostName());
-//			for (InetAddress a : addr) {
-//				System.out.println(a.toString());
-//				if (a instanceof Inet6Address) {
-//					localIpv6Address = (Inet6Address) a;
-//					break;
-//				}
-//			}
-//			
+//			this.localAddress = InetAddress.getLocalHost();
 //		} catch (UnknownHostException e) {
 //			System.out.println(e.getMessage());
 //		}
+		try {
+			InetAddress[] addr = InetAddress.getAllByName(InetAddress.getLocalHost().getHostName());
+			for (InetAddress a : addr) {
+				System.out.println(a.toString());
+				if (a instanceof Inet6Address) {
+					localAddress = (Inet6Address) a;
+					break;
+				}
+			}
+			
+		} catch (UnknownHostException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 	
 	public void createHost(String id) throws Exception {
