@@ -8,36 +8,40 @@ import java.util.Hashtable;
 
 public class LocalNetwork {
 
+	public static final int RouterPort = 5000;
+	
+	public InetAddress localAddress;
 	private Hashtable<String, Host> hosts;
-	private InetAddress localAddress;
-//	private Router router;
+	private Router router;
 	
 	public LocalNetwork() {
 		this.hosts = new Hashtable<String, Host>();
 		
-		//TODO: esse InetAddress.getLocalHost retorna ipv4, precisamos do ipv6
-//		try {
-//			this.localAddress = InetAddress.getLocalHost();
-//		} catch (UnknownHostException e) {
-//			System.out.println(e.getMessage());
-//		}
+		System.setProperty("java.net.preferIPv6Addresses","true");
+	
 		try {
-			InetAddress[] addr = InetAddress.getAllByName(InetAddress.getLocalHost().getHostName());
-			for (InetAddress a : addr) {
-				System.out.println(a.toString());
-				if (a instanceof Inet6Address) {
-					localAddress = (Inet6Address) a;
-					break;
-				}
-			}
 			
-		} catch (UnknownHostException e) {
+			this.localAddress = InetAddress.getLocalHost();
+			
+//			InetAddress[] addr = InetAddress.getAllByName(InetAddress.getLocalHost().getHostName());
+//			for (InetAddress a : addr) {
+//				System.out.println(a.toString());
+//				if (a instanceof Inet6Address) {
+//					localAddress = (Inet6Address) a;
+//					break;
+//				}
+//			}
+			
+			this.router = new Router(localAddress);
+			this.router.startReceive();
+			
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
 	
 	public void createHost(String id) throws Exception {
-		Host h = new Host(id);
+		Host h = new Host(id, localAddress);
 		h.startReceive();
 		hosts.put(id, h);
 	}
@@ -62,5 +66,14 @@ public class LocalNetwork {
 		Host fromHost = hosts.get(fromId);
 		Host toHost = hosts.get(toId);
 		fromHost.sendTo(message, localAddress, toHost.getPort());
+	}
+
+	public void sendExternalMessage(String fromId, String destAddress, String destPort, String message) {
+		Host fromHost = hosts.get(fromId);
+		try {
+			fromHost.sendTo(message, InetAddress.getByName(destAddress), Integer.parseInt(destPort));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

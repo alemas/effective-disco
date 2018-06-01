@@ -60,6 +60,26 @@ public class App {
 				
 				break;
 				
+			case "3" :
+				if (network.getHostIds().isEmpty()) {
+					System.out.println("There are no hosts :,(");
+					break;
+				}
+				System.out.println("Inform the sending host id:");
+				String fromId1 = getExistingId();
+				System.out.println("Inform the destination IP:");
+				String destAddress = scanner.nextLine();
+				System.out.println("Inform the destination port:");
+				String destPort = scanner.nextLine();
+				System.out.println("Inform the message to be sent:");
+				String message1 = scanner.nextLine();
+				network.sendExternalMessage(fromId1, destAddress, destPort, message1);
+				
+				// pro menu não atropelar mensagens no menu
+				TimeUnit.SECONDS.sleep(1);
+				
+				break;
+				
 			case "h" :
 				showHelp();
 				
@@ -82,6 +102,7 @@ public class App {
 		System.out.println("0 - Create new Host");
 		System.out.println("1 - List all Hosts");
 		System.out.println("2 - Send message locally");
+		System.out.println("3 - Send message externally");
 		System.out.println("h - Show Help");
 		System.out.println("q - Quit");
 	}

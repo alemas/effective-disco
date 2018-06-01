@@ -7,11 +7,13 @@ import java.net.SocketException;
 
 public class Host {
 
-	private DatagramSocket receiveSocket;
-	private Thread receiveThread;
-	private String id;
+	protected DatagramSocket receiveSocket;
+	protected Thread receiveThread;
+	protected String id;
+	protected final InetAddress localAddress;
 	
-	public Host(String id) throws Exception {
+	public Host(String id, InetAddress localAddress) throws Exception {
+		this.localAddress = localAddress;
 		this.receiveSocket = new DatagramSocket();
 		this.id = id;
 		printMessage("Listening on port " + getPort());
@@ -29,11 +31,7 @@ public class Host {
 					DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
 					try {
 						receiveSocket.receive(receivePacket);
-						printMessage("Hey, I've received a message!");
-						String receivedMessage = new String(receivePacket.getData());
-						String[] msgArray = receivedMessage.split(" ", 2);
-//						printMessage(receivedMessage);
-						printMessage("\nFrom: " + msgArray[0] + "\nMessage: " + msgArray[1]);
+						receivePacket(receivePacket);
 					} catch (IOException e) {
 						printMessage(e.getMessage());
 						break;
@@ -45,6 +43,18 @@ public class Host {
 		receiveThread.start();
 	}
 	
+	protected String[] breakPacket(DatagramPacket packet) {
+		String receivedMessage = new String(packet.getData());
+		return receivedMessage.split("|", 6);
+	}
+	
+	protected void receivePacket(DatagramPacket packet) {
+		printMessage("Hey, I've received a message!");
+		String receivedMessage = new String(packet.getData());
+		printMessage(receivedMessage);
+	}
+
+	
 	public void stopReceive() {
 		if (receiveThread != null) {
 			receiveThread.interrupt();
@@ -52,42 +62,31 @@ public class Host {
 		}
 	}
 	
-	public void sendTo(String message, InetAddress address, int port) {
-//		new Thread () {
-//			public void run() {
-				message = id + " " + message;
-				byte[] sendData = new byte[1024];
-				sendData = message.getBytes();
-				DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, address, port);
-				DatagramSocket socket;
-				
-				try {
-					socket = new DatagramSocket();
-					printMessage("Sending message to " + sendPacket.getAddress().toString() + " on port " + port);
-					socket.send(sendPacket);
-					socket.close();
-				} catch (Exception e) {
-//					printMessage(e.getMessage());
-				}
-//			}
-//		}.start();
+	private String messageWithHeaders(String sourceAddress, int sourcePort, String destAddress, int destPort, String data) {
+		return sourceAddress + "|" + sourcePort + "|" + destAddress + "|" + destPort + "|" + data; 
+	}
+	
+	public final void sendTo(String data, InetAddress address, int port) {
+		try {
+			DatagramSocket socket = new DatagramSocket();
+			String message = messageWithHeaders(localAddress.toString(), getPort(), address.toString(), port, data);
+			byte[] sendData = new byte[1024];
+			sendData = message.getBytes();
+			DatagramPacket sendPacket;
+			if (address == localAddress) {
+				sendPacket = new DatagramPacket(sendData, sendData.length, address, port);
+			} else {
+				sendPacket = new DatagramPacket(sendData, sendData.length, localAddress, LocalNetwork.RouterPort);
+			}
+			printMessage("Sending message to " + sendPacket.getAddress().toString() + " on port " + port);
+			socket.send(sendPacket);
+			socket.close();
+		} catch (Exception e) {
+			printMessage(e.getMessage());
+		}
 	}
 
-	private void printMessage(String message) {
+	protected void printMessage(String message) {
 		System.out.println("[" + id + "]: " + message);
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
