@@ -29,11 +29,18 @@ public class Host extends HostBase {
 			} else {
 				sendPacket = new DatagramPacket(sendData, sendData.length, localAddress, LocalNetwork.RouterPort);
 			}
-			printMessage("Sending message to " + sendPacket.getAddress().toString() + " on port " + port);
+			printMessage("Sending data to " + sendPacket.getAddress().toString() + "|" + port);
 			socket.send(sendPacket);
 			socket.close();
 		} catch (Exception e) {
 			printMessage(e.getMessage());
 		}
+	}
+	
+	@Override
+	protected void receivePacket(DatagramPacket packet) {
+		String[] brokenMessage = breakPacket(packet);
+		printMessage("Hey, I've received data!");
+		printMessageHeader(brokenMessage);
 	}
 }

@@ -56,6 +56,13 @@ public class HostBase {
 		return receivedMessage.split("[|]", 6);
 	}
 	
+	protected final void printMessageHeader(String[] message) {
+		printMessage("Header:"
+				+ "\nFrom: " + message[0] + "|" + message[1]
+				+ "\nTo: " + message[2] + "|" + message[3]
+				+ "\nFile name: " + message[4]);
+	}
+	
 	protected void printMessage(String message) {
 		System.out.println("[" + id + "]: " + message);
 	}
