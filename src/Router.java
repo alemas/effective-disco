@@ -31,7 +31,7 @@ public class Router extends HostBase {
 		printMessage("Redirecting received packet...");
 		printMessageHeader(message);
 		try {
-			sendTo(new String(packet.getData()), InetAddress.getByName(destination), Integer.parseInt(destPort));
+			sendTo(new String(packet.getData()), InetAddress.getByName(destination.replace("/", "")), Integer.parseInt(destPort));
 		} catch (Exception e) {
 			printMessage(e.toString());
 		}

@@ -29,7 +29,7 @@ public class Host extends HostBase {
 			} else {
 				sendPacket = new DatagramPacket(sendData, sendData.length, localAddress, LocalNetwork.RouterPort);
 			}
-			printMessage("Sending data to " + sendPacket.getAddress().toString() + "|" + port);
+			printMessage("Sending data to " + address.toString() + "|" + port);
 			socket.send(sendPacket);
 			socket.close();
 		} catch (Exception e) {

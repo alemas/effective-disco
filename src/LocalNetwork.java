@@ -18,7 +18,7 @@ public class LocalNetwork {
 	public LocalNetwork() {
 		this.hosts = new Hashtable<String, Host>();
 		
-		System.setProperty("java.net.preferIPv6Addresses","true");
+//		System.setProperty("java.net.preferIPv6Addresses","true");
 	
 		try {
 			
