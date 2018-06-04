@@ -78,10 +78,10 @@ public class LocalNetwork {
 		router.stopReceive();
 	}
 	
-	public void sendLocalMessage(String fromId, String toId, String message) {
+	public void sendLocalMessage(String fromId, String toId, String filename) {
 		Host fromHost = hosts.get(fromId);
 		Host toHost = hosts.get(toId);
-		fromHost.sendTo(message, localAddress, toHost.getPort());
+		fromHost.sendTo(filename, localAddress, toHost.getPort());
 	}
 
 	public void sendExternalMessage(String fromId, String destAddress, String destPort, String message) {

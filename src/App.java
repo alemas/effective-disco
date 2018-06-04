@@ -52,7 +52,7 @@ public class App {
 				String fromId = getExistingId();
 				System.out.println("Inform the receiving host id:");
 				String toId = getExistingId();
-				System.out.println("Inform the message to be sent:");
+				System.out.println("Inform the name of the file to be sent:");
 				String message = scanner.nextLine();
 				System.out.println();
 				network.sendLocalMessage(fromId, toId, message);
@@ -73,7 +73,7 @@ public class App {
 				String destAddress = scanner.nextLine();
 				System.out.println("Inform the destination port:");
 				String destPort = scanner.nextLine();
-				System.out.println("Inform the message to be sent:");
+				System.out.println("Inform the name of the file to be sent:");
 				String message1 = scanner.nextLine();
 				network.sendExternalMessage(fromId1, destAddress, destPort, message1);
 				
