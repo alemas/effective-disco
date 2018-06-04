@@ -1,5 +1,6 @@
 import java.net.Inet6Address;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,15 +19,24 @@ public class LocalNetwork {
 	public LocalNetwork() {
 		this.hosts = new Hashtable<String, Host>();
 		
-//		System.setProperty("java.net.preferIPv6Addresses","true");
+		System.setProperty("java.net.preferIPv6Addresses","true");
 	
 		try {
 			
-			this.localAddress = InetAddress.getLocalHost();
-			this.localAddress = InetAddress.getByName(localAddress.toString().split("[/]", 2)[1]);
-			System.out.println("\nLocal Address = " + localAddress);
+//			Enumeration<NetworkInterface> i = NetworkInterface.getNetworkInterfaces();
+//			while (i.hasMoreElements()) {
+//				NetworkInterface n = i.nextElement();
+//				System.out.println(n.getDisplayName());
+//				Enumeration<InetAddress> a = n.getInetAddresses();
+//				while (a.hasMoreElements()) {
+//					System.out.println(a.nextElement().toString());
+//				}
+//			}
+//			this.localAddress = InetAddress.getByName("eth4");
+//			this.localAddress = InetAddress.getByName(localAddress.toString().split("[/]", 2)[1]);
 			
-//			InetAddress[] addr = InetAddress.getAllByName(InetAddress.getLocalHost().getHostName());
+			InetAddress[] addr = InetAddress.getAllByName(InetAddress.getLocalHost().getHostName());
+			localAddress = (Inet6Address) addr[1];
 //			for (InetAddress a : addr) {
 //				System.out.println(a.toString());
 //				if (a instanceof Inet6Address) {
@@ -34,6 +44,8 @@ public class LocalNetwork {
 //					break;
 //				}
 //			}
+			this.localAddress = InetAddress.getByName(localAddress.toString().split("[/]", 2)[1]);
+			System.out.println("\nLocal Address = " + localAddress);
 			
 			this.router = new Router(localAddress);
 			this.router.startReceive();
