@@ -4,21 +4,26 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
-public class Router extends Host {
+public class Router extends HostBase {
 
 	public Router(InetAddress localAddress) throws Exception {
 		super("Router", localAddress);
-		super.receiveSocket = new DatagramSocket(LocalNetwork.RouterPort);
+		this.receiveSocket = new DatagramSocket(LocalNetwork.RouterPort);
+		printMessage("Listening on port " + getPort());
 	}
 	
 	@Override
 	protected void receivePacket(DatagramPacket packet) {
 		String[] message = breakPacket(packet);
+//		for (String s : message) { printMessage(s); }
 		String destination = message[2];
-		if (destination == localAddress.toString()) {
-			printMessage("Redirecting data to host on port " + message[1]);
+		
+		printMessage(destination);
+		printMessage(localAddress.toString());
+		if (destination.hashCode() == localAddress.toString().hashCode()) {
+			printMessage("Received data from inside the network: ");
 		} else {
-			printMessage("Sending data to " + destination + " on port " + message[3]);
+			printMessage("Received data from outside the network: ");
 		}
 	}
 	

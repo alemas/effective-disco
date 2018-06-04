@@ -5,12 +5,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 public class LocalNetwork {
 
 	public static final int RouterPort = 5000;
 	
-	public InetAddress localAddress;
+	private InetAddress localAddress;
 	private Hashtable<String, Host> hosts;
 	private Router router;
 	
@@ -22,6 +23,8 @@ public class LocalNetwork {
 		try {
 			
 			this.localAddress = InetAddress.getLocalHost();
+			this.localAddress = InetAddress.getByName(localAddress.toString().split("[/]", 2)[1]);
+			System.out.println("\nLocal Address = " + localAddress);
 			
 //			InetAddress[] addr = InetAddress.getAllByName(InetAddress.getLocalHost().getHostName());
 //			for (InetAddress a : addr) {
@@ -50,8 +53,8 @@ public class LocalNetwork {
 		return hosts.containsKey(id);
 	}
 	
-	public ArrayList<String> getHostIds() {
-		return Collections.list(hosts.keys());
+	public Iterator<Host> getHostIds() {
+		return hosts.values().iterator();
 	}
 	
 	public void close() {
@@ -60,6 +63,7 @@ public class LocalNetwork {
 			String key = e.nextElement();
 			hosts.get(key).stopReceive();
 		}
+		router.stopReceive();
 	}
 	
 	public void sendLocalMessage(String fromId, String toId, String message) {

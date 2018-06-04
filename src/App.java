@@ -34,15 +34,17 @@ public class App {
 				break;
 				
 			case "1" :
-				ArrayList<String> hosts = network.getHostIds();
-				Iterator<String> i = hosts.iterator();
-				if (!i.hasNext()) { System.out.println("There are no hosts :,("); }
-				while(i.hasNext()) { System.out.println(i.next()); }
+				Iterator<Host> hosts = network.getHostIds();
+				if (!hosts.hasNext()) { System.out.println("There are no hosts :,("); }
+				while(hosts.hasNext()) { 
+					Host h = hosts.next();
+					System.out.println(h.id + " [" + h.getPort() + "]"); 
+				}
 				
 				break;
 				
 			case "2" :
-				if (network.getHostIds().isEmpty()) {
+				if (!network.getHostIds().hasNext()) {
 					System.out.println("There are no hosts :,(");
 					break;
 				}
@@ -61,7 +63,7 @@ public class App {
 				break;
 				
 			case "3" :
-				if (network.getHostIds().isEmpty()) {
+				if (!network.getHostIds().hasNext()) {
 					System.out.println("There are no hosts :,(");
 					break;
 				}
